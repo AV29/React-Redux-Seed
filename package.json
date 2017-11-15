@@ -1,0 +1,111 @@
+{
+  "name": "react-redux-seed",
+  "version": "0.0.1",
+  "description": "React-Redux seed for building complex applications",
+  "main": "index.js",
+  "scripts": {
+    "open:src": "babel-node tools/serverDev.js",
+    "open:docs": "babel-node tools/serverDocs.js",
+    "build-docs": "rimraf docs && jsdoc -c jsDoc.json",
+    "docs": "npm run build-docs && npm run open:docs",
+    "lint": "esw --ext .js --ext .jsx webpack.config.* common src tools",
+    "test": "jest --coverage",
+    "lint:watch": "npm run lint -- --watch",
+    "test:watch": "npm run test -- --watchAll",
+    "start": "npm-run-all --parallel open:src lint:watch test:watch",
+    "clean-dist": "npm run remove-dist && mkdir dist",
+    "remove-dist": "rimraf ./dist",
+    "prebuild": "npm-run-all clean-dist test lint",
+    "build": "babel-node tools/build.js",
+    "postbuild": "babel-node tools/serverProd.js",
+    "ultimate": "npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AV29/React-Redux-Seed.git"
+  },
+  "author": "Anton Vlasik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AV29/React-Redux-Seed/issues"
+  },
+  "homepage": "https://github.com/AV29/React-Redux-Seed#readme",
+  "browserslist": [
+    "last 2 versions"
+  ],
+  "jest": {
+    "verbose": true,
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/tests/"
+    ],
+    "testPathIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+    ],
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/?(*.)(spec|test|react-test).js?(x)"
+    ],
+    "coverageDirectory": "<rootDir>/coverage"
+  },
+  "devDependencies": {
+    "autoprefixer": "~7.1.6",
+    "babel-cli": "~6.26.0",
+    "babel-core": "~6.26.0",
+    "babel-eslint": "~8.0.2",
+    "babel-helper-builder-react-jsx": "~6.26.0",
+    "babel-helper-define-map": "~6.26.0",
+    "babel-helper-regex": "~6.26.0",
+    "babel-jest": "~21.2.0",
+    "babel-loader": "~7.1.2",
+    "babel-plugin-transform-imports": "~1.4.1",
+    "babel-preset-env": "~1.6.1",
+    "babel-preset-react": "~6.24.1",
+    "babel-preset-react-hmre": "~1.1.1",
+    "babel-preset-stage-1": "~6.24.1",
+    "babel-register": "~6.26.0",
+    "chalk": "~1.1.3",
+    "compression": "~1.6.2",
+    "css-loader": "~0.28.7",
+    "eslint": "~4.11.0",
+    "eslint-plugin-react": "~7.4.0",
+    "eslint-watch": "~3.1.3",
+    "express": "~4.16.2",
+    "extract-text-webpack-plugin": "~3.0.2",
+    "file-loader": "~1.1.5",
+    "html-webpack-plugin": "~2.30.1",
+    "jest": "~21.2.1",
+    "jsdoc": "~3.5.5",
+    "less": "~2.7.3",
+    "less-loader": "~4.0.5",
+    "npm-run-all": "~4.1.2",
+    "open": "0.0.5",
+    "postcss": "~6.0.14",
+    "postcss-flexbugs-fixes": "~3.2.0",
+    "postcss-loader": "~2.0.8",
+    "prop-types": "~15.6.0",
+    "react-svg-loader": "~2.1.0",
+    "rimraf": "~2.6.2",
+    "style-loader": "~0.19.0",
+    "url-loader": "~0.6.2",
+    "webpack": "~3.8.1",
+    "webpack-dev-middleware": "~1.12.0",
+    "webpack-hot-middleware": "~2.20.0"
+  },
+  "dependencies": {
+    "axios": "~0.17.1",
+    "babel-polyfill": "~6.26.0",
+    "classnames": "~2.2.5",
+    "immutable": "~3.8.2",
+    "moment": "~2.19.2",
+    "react": "~16.1.0",
+    "react-dom": "~16.1.0",
+    "react-onclickoutside": "~6.7.0",
+    "react-redux": "~5.0.6",
+    "react-redux-i18n": "~1.9.1",
+    "react-router-dom": "~4.2.2",
+    "redux": "~3.7.2",
+    "redux-thunk": "~2.2.0",
+    "reselect": "~3.0.1"
+  }
+}

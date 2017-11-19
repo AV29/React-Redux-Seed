@@ -1,10 +1,8 @@
 import 'babel-polyfill';
 import {render} from 'react-dom';
 import React from 'react';
-import routes from './routing/routes';
+import Root from './components/Root';
 import {loadTranslations, setLocale, syncTranslationWithStore} from 'react-redux-i18n';
-import {Provider} from 'react-redux';
-import {BrowserRouter} from 'react-router-dom';
 import {getDefaultLocaleName, languages} from './utilities/language';
 import configureStore from './store/configureStore';
 import './styles/styles.less';
@@ -16,10 +14,6 @@ store.dispatch(setLocale(defaultLocale));
 store.dispatch(loadTranslations(languages));
 
 render(
-  <Provider store={store}>
-    <BrowserRouter>
-      {routes}
-    </BrowserRouter>
-  </Provider>,
+  <Root store={store}/>,
   document.getElementById('application-root')
 );

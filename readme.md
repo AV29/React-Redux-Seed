@@ -26,7 +26,6 @@ You'll need to have installed:
 * [Eslint](https://eslint.org/) (v.4) - Code quality tool
 * [JsDoc](http://usejsdoc.org/) - Documentation generator
 
-
 ## Cloning
 
 ```

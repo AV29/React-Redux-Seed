@@ -1,7 +1,8 @@
 # In your Dockerfile.
 FROM node:latest
 ENV NPM_CONFIG_LOGLEVEL warn
-COPY . .
+COPY package*.json ./
 RUN npm install
-EXPOSE 3000
-CMD ['npm', 'run', 'build']
+COPY . .
+EXPOSE 3020
+CMD npm run build

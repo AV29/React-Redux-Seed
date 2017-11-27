@@ -75,7 +75,42 @@ module.exports = {
       {
         test: /(\.css|\.less)$/,
         exclude: [/docs/],
-        loader: ExtractTextPlugin.extract('css-loader?sourceMap!postcss-loader?sourceMap!less-loader?sourceMap')
+        loader: ExtractTextPlugin.extract(
+          Object.assign({
+            fallback: {
+              loader: 'style-loader',
+              options: {
+                hmr: false
+              }
+            },
+            use: [
+              {
+                loader: 'css-loader',
+                options: {
+                  importLoaders: 1,
+                  minimize: true,
+                  sourceMap: true
+                }
+              },
+              {
+                loader: 'postcss-loader',
+                options: {
+                  sourceMap: true,
+                  ident: 'postcss',
+                  config: {
+                    path: 'postcss.config.js'
+                  }
+                }
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  sourceMap: true
+                }
+              }
+            ]
+          })
+        )
       },
       {
         test: /\.(jpe?g|png|gif)$/i,

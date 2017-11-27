@@ -1,5 +1,5 @@
 # In your Dockerfile.
-FROM node:8.9.1
+FROM node:latest
 ENV NPM_CONFIG_LOGLEVEL warn
 COPY . .
 RUN npm install

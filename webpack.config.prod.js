@@ -32,6 +32,7 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       beautify: false,
       mangle: {
+        safari10: true,
         screw_ie8: true,
         keep_fnames: true
       },
@@ -40,7 +41,7 @@ module.exports = {
         screw_ie8: true,
         conditionals: true,
         unused: true,
-        comparisons: true,
+        comparisons: false,
         sequences: true,
         dead_code: true,
         evaluate: true,
@@ -49,8 +50,10 @@ module.exports = {
         drop_console: true
       },
       output: {
-        comments: false
-      }
+        comments: false,
+        ascii_only: true
+      },
+      sourceMap: true
     }),
     new HtmlWebpackPlugin({
       inject: true,
@@ -67,7 +70,7 @@ module.exports = {
       {
         test: /(\.js$|\.jsx?$)/,
         loader: 'babel-loader',
-        exclude: [/node_modules/, /tools/, /docs/],
+        exclude: [/node_modules/, /docs/],
         options: {
           sourceMap: true
         }

@@ -2,17 +2,18 @@
 /* eslint-disable no-console */
 import express from 'express';
 import path from 'path';
-import open from 'open';
+import * as chalk from './chalkConfig';
 import * as consts from './constants';
 
+const {DOC_PATH, DOC_PORT} = consts;
 const app = express();
 
-app.use(express.static(path.join(__dirname, consts.DOC_PATH)));
+app.use(express.static(path.join(__dirname, DOC_PATH)));
 
-app.listen(consts.DOC_PORT, (err) => {
+app.listen(DOC_PORT, (err) => {
   if (err) {
     console.log(err);
   } else {
-    open(consts.DOC_APP_ENTRY_POINT);
+    console.log(chalk.chalkSuccess(`Docs listen on port ${DOC_PORT}`));
   }
 });

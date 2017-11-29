@@ -23,7 +23,7 @@ class App extends Component {
   render() {
     return (
       <div className="application-content-wrapper">
-        <h1>{I18n.t('main.title')} 123123123</h1>
+        <h1>{I18n.t('main.title')}</h1>
         <div className="test-icon">
           <h2>{I18n.t('main.clickMessage')}</h2>
           <Icon

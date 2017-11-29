@@ -4,7 +4,7 @@ import {getDefaultLocaleName} from '../../../src/utilities/language';
 describe('Language Utility', () => {
   it('it should extract language abbreviation from passed argument', () => {
     const expected = getDefaultLocaleName('ru');
-    expect(expected).toEqual('ru');
+    expect(expected).toEqual('rsdfsdfu');
   });
 
   it('it should extract language abbreviation from passed argument if language has a dash', () => {

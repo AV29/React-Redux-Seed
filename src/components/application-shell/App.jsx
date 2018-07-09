@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {I18n} from 'react-redux-i18n';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import routesConfiguration from '../../routing/routesConfiguration';
 import Icon from '../common/icon/Icon';
+import {push} from 'connected-react-router';
 
 class App extends Component {
 
@@ -17,7 +19,7 @@ class App extends Component {
   }
 
   redirect(path) {
-    this.props.history.push(path);
+    this.props.dispatch(push(path));
   }
 
   render() {
@@ -41,9 +43,10 @@ class App extends Component {
 }
 
 App.propTypes = {
-  history: PropTypes.object
+  history: PropTypes.object,
+  dispatch: PropTypes.func
 };
 
 
-export default App;
+export default connect()(App);
 

@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-import {BrowserRouter} from 'react-router-dom';
+import {ConnectedRouter} from 'connected-react-router';
 import routes from '../routing/routes';
 
-const Root = ({store}) => (
+const Root = ({store, history}) => (
   <Provider store={store}>
-    <BrowserRouter>
+    <ConnectedRouter history={history}>
       {routes}
-    </BrowserRouter>
+    </ConnectedRouter>
   </Provider>
 );
 
 Root.propTypes = {
-  store: PropTypes.object
+  store: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default Root;

@@ -16,6 +16,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 app.use(require('webpack-hot-middleware')(compiler));
 
+app.use(require('prerender-node').set('prerenderToken', 'YOUR_TOKEN'));
 // Everything else will return the index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, consts.DEV_FALLBACK_INDEX_POINT));

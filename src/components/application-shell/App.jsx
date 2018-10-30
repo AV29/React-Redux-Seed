@@ -3,8 +3,6 @@ import {I18n} from 'react-redux-i18n';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import routesConfiguration from '../../routing/routesConfiguration';
-import Icon from '../common/icon/Icon';
-import {push} from 'connected-react-router';
 
 import RenderPropContainer from '../RenderProps/RenderPropContainer';
 
@@ -26,7 +24,7 @@ class App extends Component {
   }
 
   redirect(path) {
-    this.props.dispatch(push(path));
+    this.props.history.push(path);
   }
 
   handleChangeRenderPropContainerData(value) {

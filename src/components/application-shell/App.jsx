@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import routesConfiguration from '../../routing/routesConfiguration';
 
-import RenderPropContainer from '../RenderProps/RenderPropContainer';
+import AdjacentProduction from '../AdjacentProduction/AdjacentCalc';
 
 class App extends Component {
 
@@ -35,12 +35,8 @@ class App extends Component {
   render() {
     return (
       <div className="application-content-wrapper">
-        <h1>{I18n.t('main.title')}</h1>
         <div className="application-body-wrapper">
-          <RenderPropContainer
-            sharedData={this.state.sharedData}
-            onNotifyParent={this.handleChangeRenderPropContainerData}
-          />
+          <AdjacentProduction/>
         </div>
       </div>
     );

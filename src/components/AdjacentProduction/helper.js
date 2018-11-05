@@ -22,7 +22,7 @@ export const matrix = [
 ];
 
 export function findMaxAdjacent(data, lim) {
-  const size = 20;
+  const size = data[0].length;
   let result = {res: 1, indexes: []};
   let vectors = new Array(8).fill(0);
   let directionsMap = [];
@@ -49,3 +49,5 @@ export function findMaxAdjacent(data, lim) {
   }
   return result;
 }
+
+export const getRandomValue = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;

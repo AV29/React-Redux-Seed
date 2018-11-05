@@ -1,13 +1,54 @@
 .adjacent-calc-container {
-  position: relative;
   font-size: 16px;
   user-select: none;
   margin: 0 auto;
   width: 100%;
   text-align: center;
-  .error {
-    color: tomato;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .controls-block {
+    margin-bottom: 15px;
+    width: 100%;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    .control {
+      display: flex;
+      flex: 1;
+      max-width: 200px;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      margin-left: 10px;
+      label {
+        font-size: 10px;
+        margin-bottom: 5px;
+      }
+      .input-wrapper {
+        width: 100%;
+      }
+      input {
+        border: none;
+        padding: 2px;
+        text-align: center;
+        width: 100%;
+        &.has-error {
+          box-shadow: 0 0 2px tomato;
+        }
+      }
+    }
+    .error {
+      font-size: 10px;
+      position: absolute;
+      color: tomato;
+      left: 50%;
+      transform: translateX(-50%);
+      top: ~'calc(100% + 2px)';
+    }
   }
+
 }
 
 .adjacent-calc-cell {

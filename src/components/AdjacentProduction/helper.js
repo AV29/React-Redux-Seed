@@ -30,7 +30,7 @@ export function findMaxAdjacent(data, lim) {
 
   const isIndexCorrect = (x, y) => x < size && y < size && x >= 0 && y >= 0;
 
-  for (let i = 0; i < size; i = i + lim) {
+  for (let i = 0; i < size; i += 1) {
     for (let j = 0; j < size; j += 1) {
       vectors = vectors.map(() => ({res: 1, indexes: []}));
       for (let k = 0; k < lim; k += 1) {

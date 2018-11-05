@@ -21,16 +21,9 @@ class AdjacentCalc extends Component {
     };
   }
 
-  componentDidUpdate(_, prevState) {
-    if (this.state.size !== prevState.size) {
-      this.updateState();
-    }
-  }
-
-  populateData() {
+  static populateData(size) {
     const data = [];
-    const size = +this.state.size;
-    if (!size) return data;
+    if (!size) return [[]];
     for (let i = 0; i < size; i += 1) {
       data.push([]);
       for (let j = 0; j < size; j += 1) {
@@ -40,16 +33,9 @@ class AdjacentCalc extends Component {
     return data;
   }
 
-  updateState() {
-    const data = this.populateData();
-    this.setState({
-      data,
-      result: findMaxAdjacent(data, +this.state.limit)
-    });
-  }
-
   handleLimitChange({target: {value}}) {
     const isLimitInvalid = +value > this.state.size;
+
     isLimitInvalid ? this.setState({
       isLimitInvalid,
       limit: value
@@ -64,12 +50,19 @@ class AdjacentCalc extends Component {
 
   handleChangeSize({target: {value}}) {
     const isSizeInvalid = +value > this.sizeLimit;
-    isSizeInvalid ? this.setState({
-      isSizeInvalid
-    }) : this.setState({
-      isSizeInvalid,
-      size: value
-    });
+    if (isSizeInvalid) {
+      this.setState({
+        isSizeInvalid
+      });
+    } else {
+      const data = AdjacentCalc.populateData(+value);
+      this.setState({
+        isSizeInvalid,
+        size: value,
+        data,
+        result: findMaxAdjacent(data, +this.state.limit)
+      });
+    }
   }
 
   defineIfCellIsActive(rowInd, cellInd) {

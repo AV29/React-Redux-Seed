@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import classNames from 'classnames';
-import {matrix, findMaxAdjacent, getRandomValue} from './helper';
+import {findMaxAdjacent, getRandomValue} from './utilities';
 
 class AdjacentCalc extends Component {
   static populateData(size) {
@@ -15,18 +15,20 @@ class AdjacentCalc extends Component {
     return data;
   }
 
-  static getInitialState(config) {
-    const initialState = {
-      validation: {},
-      values: {},
-      data: matrix,
-      result: findMaxAdjacent(matrix, config.find(item => item.id === 'limit').defaultValue)
+  static getInitialState(limit, size) {
+    const data = AdjacentCalc.populateData(size);
+    return {
+      validation: {
+        size: false,
+        limit: false
+      },
+      values: {
+        size,
+        limit
+      },
+      data,
+      result: findMaxAdjacent(data, limit)
     };
-    config.forEach(item => {
-      initialState.validation[item.id] = false;
-      initialState.values[item.id] = item.defaultValue;
-    });
-    return initialState;
   }
 
   constructor(props) {
@@ -35,36 +37,24 @@ class AdjacentCalc extends Component {
     this.handleLimitChange = this.handleLimitChange.bind(this);
     this.handleChangeSize = this.handleChangeSize.bind(this);
     this.regenerate = this.regenerate.bind(this);
-    this.defaultLimit = 20;
-    this.config = [
-      {
-        id: 'size',
-        defaultValue: this.defaultLimit,
-        onChange: this.handleChangeSize,
-        getLimitRule: () => this.defaultLimit
-      },
-      {
-        id: 'limit',
-        defaultValue: 4,
-        onChange: this.handleLimitChange,
-        getLimitRule: () => this.state.size
-      }
-    ];
-    this.state = AdjacentCalc.getInitialState(this.config);
+    this.defaultLimit = 4;
+    this.defaultSize = 20;
+    this.state = AdjacentCalc.getInitialState(this.defaultLimit, this.defaultSize);
   }
 
   handleLimitChange({target: {value}}) {
-    const isLimitInvalid = +value > this.state.size;
+    const isLimitInvalid = +value > this.state.values.size;
 
     if (isLimitInvalid) {
-      this.setState(({validation}) => ({
+      this.setState(({validation, values}) => ({
         validation: {...validation, limit: isLimitInvalid},
+        values: {...values, limit: value},
         limit: value
       }));
     } else {
-      this.setState(({validation}) => ({
+      this.setState(({validation, values}) => ({
         validation: {...validation, limit: isLimitInvalid},
-        limit: value,
+        values: {...values, limit: value},
         result: value
           ? findMaxAdjacent(this.state.data, +value)
           : {indexes: []}
@@ -73,19 +63,19 @@ class AdjacentCalc extends Component {
   }
 
   handleChangeSize({target: {value}}) {
-    const isSizeInvalid = +value > this.sizeLimit;
+    const isSizeInvalid = +value > this.defaultSize;
     if (isSizeInvalid) {
-      this.setState(({validation}) => ({
+      this.setState(({validation, values}) => ({
         validation: {...validation, size: isSizeInvalid},
-        size: value
+        values: {...values, size: value}
       }));
     } else {
       const data = AdjacentCalc.populateData(+value);
-      this.setState(({validation}) => ({
+      this.setState(({validation, values}) => ({
         validation: {...validation, size: isSizeInvalid},
-        size: value,
+        values: {...values, size: value},
         data,
-        result: findMaxAdjacent(data, +this.state.limit)
+        result: findMaxAdjacent(data, +this.state.values.limit)
       }));
     }
   }
@@ -95,10 +85,10 @@ class AdjacentCalc extends Component {
   }
 
   regenerate() {
-    const data = AdjacentCalc.populateData(+this.state.size);
+    const data = AdjacentCalc.populateData(+this.state.values.size);
     this.setState({
       data,
-      result: findMaxAdjacent(data, +this.state.limit)
+      result: findMaxAdjacent(data, +this.state.values.limit)
     });
   }
 
@@ -134,26 +124,37 @@ class AdjacentCalc extends Component {
           >
             Regenerate Data
           </button>
-          {this.config.map(({id, onChange, getLimitRule}) => {
-            return (
-              <div
-                className="control"
-                key={id}
-              >
-                <label htmlFor={id}>{id}</label>
-                <div className="input-wrapper">
-                  <input
-                    id={id}
-                    type="number"
-                    className={classNames({'has-error': this.state.validation[id]})}
-                    onChange={onChange}
-                    value={this.state[id]}
-                  />
-                  {this.state.validation[id] && <div className="error"> {`can't be more than ${getLimitRule()}`}</div>}
+          <div className="control">
+            <label htmlFor="size">size</label>
+            <div className="input-wrapper">
+              <input
+                id="size"
+                type="number"
+                className={classNames({'has-error': this.state.validation.size})}
+                onChange={this.handleChangeSize}
+                value={this.state.values.size}
+              />
+              {this.state.validation.size && <div className="error"> {`can't be more than ${this.defaultSize}`}</div>}
+            </div>
+          </div>
+          <div className="control">
+            <label htmlFor="limit">limit</label>
+            <div className="input-wrapper">
+              <input
+                id="limit"
+                type="number"
+                className={classNames({'has-error': this.state.validation.limit})}
+                onChange={this.handleLimitChange}
+                value={this.state.values.limit}
+              />
+              {
+                this.state.validation.limit &&
+                <div className="error">
+                  {`can't be more than ${this.state.values.size}`}
                 </div>
-              </div>
-            );
-          })}
+              }
+            </div>
+          </div>
           <div className="result">
             Result: {this.state.result.res}
           </div>

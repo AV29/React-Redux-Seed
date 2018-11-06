@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import routesConfiguration from '../../routing/routesConfiguration';
 
-import AdjacentProduction from '../AdjacentProduction/AdjacentCalc';
+import AdjacentProduction from '../adjacent-production/AdjacentCalc';
 
 class App extends Component {
 

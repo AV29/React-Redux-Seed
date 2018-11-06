@@ -18,14 +18,9 @@ class AdjacentCalc extends Component {
   static getInitialState(limit, size) {
     const data = AdjacentCalc.populateData(size);
     return {
-      validation: {
-        size: false,
-        limit: false
-      },
-      values: {
-        size,
-        limit
-      },
+      isInvalid: false,
+      size,
+      limit,
       data,
       result: findMaxAdjacent(data, limit)
     };
@@ -47,40 +42,34 @@ class AdjacentCalc extends Component {
   }
 
   handleChangeLimit({target: {value}}) {
-    this.handleValidate({size: this.state.values.size, limit: +value}, this.recalculate);
+    this.handleValidate(this.state.size, +value, this.recalculate);
   }
 
   handleChangeSize({target: {value}}) {
-    this.handleValidate({size: +value, limit: this.state.values.limit}, this.regenerate);
+    this.handleValidate(+value, this.state.limit, this.regenerate);
   }
 
-  handleValidate({size, limit}, callback) {
-    let isSizeInvalid = false;
-    let isLimitInvalid = false;
-    if (size > this.defaultSize || size < limit) {
-      isSizeInvalid = true;
-    }
-    if (limit > size) {
-      isLimitInvalid = true;
-    }
-
-    this.setState(({validation}) => ({
-      validation: {size: isSizeInvalid, limit: isLimitInvalid},
-      values: {size, limit}
-    }), isSizeInvalid || isLimitInvalid ? null : callback);
+  handleValidate(size, limit, callback) {
+    const isInvalid = size > this.defaultSize || size < limit;
+    this.setState(() => ({
+      isInvalid,
+      size,
+      limit
+    }), isInvalid ? null : callback);
   }
 
   recalculate() {
-    this.setState(({values: {limit}, data}) => ({
+    this.setState(({limit, data}) => ({
       result: findMaxAdjacent(data, +limit)
     }));
   }
 
   regenerate() {
-    const data = AdjacentCalc.populateData(+this.state.values.size);
+    const {limit, size} = this.state;
+    const data = AdjacentCalc.populateData(+size);
     this.setState({
       data,
-      result: findMaxAdjacent(data, +this.state.values.limit)
+      result: findMaxAdjacent(data, +limit)
     });
   }
 
@@ -88,8 +77,8 @@ class AdjacentCalc extends Component {
     return this.state.result.indexes.find(({x, y}) => rowIndex === x && cellIndex === y);
   }
 
-  getData() {
-    return this.state.data.map((row, rowIndex) => (
+  getData(data) {
+    return data.map((row, rowIndex) => (
       <div
         key={rowIndex}
         className="adjacent-calc-row"
@@ -111,6 +100,7 @@ class AdjacentCalc extends Component {
   }
 
   render() {
+    const {data, isInvalid, size, limit, result: {res}} = this.state;
     return (
       <div className="adjacent-calc-container">
         <div className="controls-block">
@@ -126,14 +116,14 @@ class AdjacentCalc extends Component {
               <input
                 id="size"
                 type="number"
-                className={classNames({'has-error': this.state.validation.size})}
+                className={classNames({'has-error': isInvalid})}
                 onChange={this.handleChangeSize}
-                value={this.state.values.size}
+                value={size}
               />
               {
-                this.state.validation.size &&
+                isInvalid &&
                 <div className="error">
-                  {`should be in range of ${this.state.values.limit} - ${this.defaultSize}`}
+                  {`should be in range of ${limit} - ${this.defaultSize}`}
                 </div>
               }
             </div>
@@ -144,24 +134,24 @@ class AdjacentCalc extends Component {
               <input
                 id="limit"
                 type="number"
-                className={classNames({'has-error': this.state.validation.limit})}
+                className={classNames({'has-error': isInvalid})}
                 onChange={this.handleChangeLimit}
-                value={this.state.values.limit}
+                value={limit}
               />
               {
-                this.state.validation.limit &&
+                isInvalid &&
                 <div className="error">
-                  {`can't be more than ${this.state.values.size}`}
+                  {`can't be more than ${size}`}
                 </div>
               }
             </div>
           </div>
           <div className="result">
-            Result: {this.state.result.res}
+            Result: {res}
           </div>
         </div>
         <div className="numbers-wrapper">
-          {this.getData()}
+          {this.getData(data)}
         </div>
       </div>
     );

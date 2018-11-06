@@ -34,54 +34,46 @@ class AdjacentCalc extends Component {
   constructor(props) {
     super(props);
 
-    this.handleLimitChange = this.handleLimitChange.bind(this);
+    this.handleChangeLimit = this.handleChangeLimit.bind(this);
     this.handleChangeSize = this.handleChangeSize.bind(this);
+    this.handleValidate = this.handleValidate.bind(this);
+    this.recalculate = this.recalculate.bind(this);
     this.regenerate = this.regenerate.bind(this);
+
     this.defaultLimit = 4;
     this.defaultSize = 20;
+
     this.state = AdjacentCalc.getInitialState(this.defaultLimit, this.defaultSize);
   }
 
-  handleLimitChange({target: {value}}) {
-    const isLimitInvalid = +value > this.state.values.size;
-
-    if (isLimitInvalid) {
-      this.setState(({validation, values}) => ({
-        validation: {...validation, limit: isLimitInvalid},
-        values: {...values, limit: value},
-        limit: value
-      }));
-    } else {
-      this.setState(({validation, values}) => ({
-        validation: {...validation, limit: isLimitInvalid},
-        values: {...values, limit: value},
-        result: value
-          ? findMaxAdjacent(this.state.data, +value)
-          : {indexes: []}
-      }));
-    }
+  handleChangeLimit({target: {value}}) {
+    this.handleValidate({size: this.state.values.size, limit: +value}, this.recalculate);
   }
 
   handleChangeSize({target: {value}}) {
-    const isSizeInvalid = +value > this.defaultSize;
-    if (isSizeInvalid) {
-      this.setState(({validation, values}) => ({
-        validation: {...validation, size: isSizeInvalid},
-        values: {...values, size: value}
-      }));
-    } else {
-      const data = AdjacentCalc.populateData(+value);
-      this.setState(({validation, values}) => ({
-        validation: {...validation, size: isSizeInvalid},
-        values: {...values, size: value},
-        data,
-        result: findMaxAdjacent(data, +this.state.values.limit)
-      }));
-    }
+    this.handleValidate({size: +value, limit: this.state.values.limit}, this.regenerate);
   }
 
-  isCellActive(rowIndex, cellIndex) {
-    return this.state.result.indexes.find(({x, y}) => rowIndex === x && cellIndex === y);
+  handleValidate({size, limit}, callback) {
+    let isSizeInvalid = false;
+    let isLimitInvalid = false;
+    if (size > this.defaultSize || size < limit) {
+      isSizeInvalid = true;
+    }
+    if (limit > size) {
+      isLimitInvalid = true;
+    }
+
+    this.setState(({validation}) => ({
+      validation: {size: isSizeInvalid, limit: isLimitInvalid},
+      values: {size, limit}
+    }), isSizeInvalid || isLimitInvalid ? null : callback);
+  }
+
+  recalculate() {
+    this.setState(({values: {limit}, data}) => ({
+      result: findMaxAdjacent(data, +limit)
+    }));
   }
 
   regenerate() {
@@ -90,6 +82,10 @@ class AdjacentCalc extends Component {
       data,
       result: findMaxAdjacent(data, +this.state.values.limit)
     });
+  }
+
+  isTargetCell(rowIndex, cellIndex) {
+    return this.state.result.indexes.find(({x, y}) => rowIndex === x && cellIndex === y);
   }
 
   getData() {
@@ -104,7 +100,7 @@ class AdjacentCalc extends Component {
               key={cellIndex}
               className={classNames(
                 'adjacent-calc-cell',
-                {active: this.isCellActive(rowIndex, cellIndex)}
+                {active: this.isTargetCell(rowIndex, cellIndex)}
               )}
             >
               {cell}
@@ -134,7 +130,12 @@ class AdjacentCalc extends Component {
                 onChange={this.handleChangeSize}
                 value={this.state.values.size}
               />
-              {this.state.validation.size && <div className="error"> {`can't be more than ${this.defaultSize}`}</div>}
+              {
+                this.state.validation.size &&
+                <div className="error">
+                  {`should be in range of ${this.state.values.limit} - ${this.defaultSize}`}
+                </div>
+              }
             </div>
           </div>
           <div className="control">
@@ -144,7 +145,7 @@ class AdjacentCalc extends Component {
                 id="limit"
                 type="number"
                 className={classNames({'has-error': this.state.validation.limit})}
-                onChange={this.handleLimitChange}
+                onChange={this.handleChangeLimit}
                 value={this.state.values.limit}
               />
               {

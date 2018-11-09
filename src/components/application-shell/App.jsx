@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
-import {I18n} from 'react-redux-i18n';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import routesConfiguration from '../../routing/routesConfiguration';
-
-import AdjacentProduction from '../adjacent-production/AdjacentCalc';
 
 class App extends Component {
 
@@ -36,7 +33,6 @@ class App extends Component {
     return (
       <div className="application-content-wrapper">
         <div className="application-body-wrapper">
-          <AdjacentProduction/>
         </div>
       </div>
     );
